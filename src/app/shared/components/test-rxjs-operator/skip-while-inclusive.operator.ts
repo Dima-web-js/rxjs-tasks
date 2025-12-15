@@ -4,13 +4,16 @@ import { scan, filter, map } from 'rxjs/operators';
 /**
  * Задание №1:
  * Кастомный оператор skipWhileInclusive
- * - пропускает значения, пока predicate возвращает true
- * - первое значение, для которого predicate стал false, тоже пропускает
- * - после этого эмитит все последующие значения
+ * Он делает так:
+ * - Пока predicate === true → пропускаем значения
+ * - Первое значение, где predicate стал false → тоже пропускаем (inclusive)
+ * - После этого эмитим все последующие значения, вообще без проверок predicate
  */
 export function skipWhileInclusive<T>(
   // predicate определяет, нужно ли пропускать текущее значение
   predicate: (value: T, index: number) => boolean
+  // Принимает: Observable<T> — исходный поток, 
+  // Возвращает: Observable<T> — поток с пропущенными значениями
 ): MonoTypeOperatorFunction<T> {
 
   // Тип аккумулятора для scan — хранит состояние пропуска и само значение

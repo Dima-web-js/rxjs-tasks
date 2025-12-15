@@ -8,6 +8,7 @@ export interface Cart {
     total: number;
     discountPercentage: number;
     discountedTotal: number;
+    thumbnail?: string; // URL миниатюры изображения продукта (опциональное поле)
   }>;
   total: number;
   discountedTotal: number;

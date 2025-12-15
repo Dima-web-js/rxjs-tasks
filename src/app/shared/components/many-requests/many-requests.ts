@@ -29,14 +29,25 @@ export class ManyRequests {
 
     // Получаем 5 пользователей
     this.userDataService
-      .getUsersByLimit(5)
+    // У первых 5 нет корзины, но если, например 20 ввести, то увидим
+      .getUsersByLimit(20)
       .pipe(
+        /**
+         * tap - это оператор, который позволяет выполнять действия над данными,
+         * не изменяя их. Он используется для отслеживания промежуточных значений.
+         * В данном случае, мы используем его для увеличения счётчика запросов.
+         */
         tap(() => this.requestCount.update((count) => count + 1)),
         // Для каждого пользователя получаем cart и todos параллельно
         switchMap((users: User[]) => {
           // Создаем массив запросов для каждого пользователя
           const userDataRequests = users.map((user: User) =>
-            forkJoin({
+            forkJoin({ 
+              /**
+             * forkJoin - это оператор, который позволяет выполнять несколько запросов параллельно
+             * и получить результаты в виде массива.
+             * В данном случае, мы используем его для получения cart и todos для каждого пользователя.
+             */
               carts: this.userDataService.getUserCarts(user.id).pipe(
                 tap(() => this.requestCount.update((count) => count + 1)),
                 catchError(() => of<Cart[]>([]))
