@@ -30,7 +30,7 @@ export class ManyRequests {
     // Получаем 5 пользователей
     this.userDataService
     // У первых 5 нет корзины, но если, например 20 ввести, то увидим
-      .getUsersByLimit(20)
+      .getUsersByLimit(5)
       .pipe(
         /**
          * tap - это оператор, который позволяет выполнять действия над данными,
