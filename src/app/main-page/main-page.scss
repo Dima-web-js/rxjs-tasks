@@ -1,0 +1,20 @@
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+
+}
+
+.nav-item {
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 0, 199);
+    text-decoration: underline;
+  }
+
+
+  &.active {
+    color: blue;
+  }
+}

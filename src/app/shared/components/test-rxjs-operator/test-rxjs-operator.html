@@ -1,0 +1,127 @@
+<div class="test-container">
+  <h2 class="h2-primary">Тестирование оператора skipWhileInclusive</h2>
+
+  <div class="description">
+    <p>
+      Оператор <code>skipWhileInclusive</code> пропускает значения, пока predicate возвращает <code>true</code>,
+      и также пропускает первое значение, для которого predicate стал <code>false</code> (inclusive).
+      После этого эмитит все последующие значения.
+    </p>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label for="input-values" class="label-primary">Входная последовательность (через запятую):</label>
+      <input class="input-primary"
+        id="input-values"
+        type="text"
+        [value]="inputValues()"
+        (input)="inputValues.set($any($event.target).value)"
+        placeholder="1, 2, 3, 4, 5"
+      />
+    </div>
+
+    <div class="control-group">
+      <label for="predicate-type" class="label-primary">Тип predicate:</label>
+      <select
+        class="select-primary"
+        id="predicate-type"
+        [value]="predicateType()"
+        (change)="predicateType.set($any($event.target).value)"
+      >
+        @for (type of predicateTypes; track type.value) {
+          <option [value]="type.value">{{ type.label }}</option>
+        }
+      </select>
+    </div>
+
+    @if (predicateType() === 'lessThan' || predicateType() === 'greaterThan') {
+      <div class="control-group">
+        <label for="predicate-value" class="label-primary">Значение:</label>
+        <input class="input-primary"
+          id="predicate-value"
+          type="number"
+          [value]="predicateValue()"
+          (input)="predicateValue.set($any($event.target).value)"
+          placeholder="5"
+        />
+      </div>
+    }
+
+    @if (predicateType() === 'custom') {
+      <div class="control-group">
+        <label for="custom-predicate" class="label-primary">Кастомный predicate (x - значение, index - индекс):</label>
+        <input class="input-primary"
+          id="custom-predicate"
+          type="text"
+          [value]="customPredicate()"
+          (input)="customPredicate.set($any($event.target).value)"
+          placeholder="x < 5"
+        />
+      </div>
+    }
+
+    <div class="button-group">
+      <button type="button" (click)="testOperator()" class="btn btn-primary">
+        Тестировать
+      </button>
+      <button type="button" (click)="loadExample('example1')" class="btn btn-secondary">
+        Пример 1
+      </button>
+      <button type="button" (click)="loadExample('example2')" class="btn btn-secondary">
+        Пример 2
+      </button>
+      <button type="button" (click)="loadExample('example3')" class="btn btn-secondary">
+        Пример 3
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (inputSequence().length > 0) {
+    <div class="results">
+      <div class="result-section">
+        <h3>Входная последовательность:</h3>
+        <div class="sequence">
+          @for (value of inputSequence(); track $index) {
+            <span
+              class="value"
+              [class.skipped]="skippedValues().includes(value)"
+            >
+              {{ value }}
+            </span>
+          }
+        </div>
+      </div>
+
+      @if (skippedValues().length > 0) {
+        <div class="result-section">
+          <h3>Пропущенные значения (включая первое, где predicate стал false):</h3>
+          <div class="sequence">
+            @for (value of skippedValues(); track $index) {
+              <span class="value skipped">{{ value }}</span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="result-section">
+        <h3>Результат (эмитированные значения):</h3>
+        <div class="sequence">
+          @if (outputSequence().length === 0) {
+            <span class="empty">Нет значений для эмита</span>
+          } @else {
+            @for (value of outputSequence(); track $index) {
+              <span class="value emitted">{{ value }}</span>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

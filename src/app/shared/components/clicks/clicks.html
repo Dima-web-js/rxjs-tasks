@@ -1,0 +1,44 @@
+<div class="clicks-container">
+  <h2>Задача 3. Клики</h2>
+
+  <div class="description">
+    <p>Кликните по кнопке один раз или дважды (с интервалом не более 300мс) для тестирования.</p>
+    <ul>
+      <li>Одиночный клик → выполняется <code>singleClickAction()</code></li>
+      <li>Двойной клик (≤300мс) → выполняется <code>doubleClickAction()</code></li>
+      <li>При двойном клике одиночный клик не срабатывает</li>
+      <li>Остальное количество кликов игнорируется</li>
+    </ul>
+  </div>
+
+  <div class="button-container">
+    <button class="btn btn-primary click-button" type="button">
+      Кликните меня
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">
+      <span class="label-primary">Всего кликов:</span>
+      <span class="stat-value">{{ clickCount() }}</span>
+    </div>
+  </div>
+
+  <div class="log-container">
+    <div class="log-header">
+      <h3>Журнал действий</h3>
+      <button class="btn btn-secondary" type="button" (click)="clearLog()">
+        Очистить
+      </button>
+    </div>
+    <div class="log-content">
+      @if (actionLog().length === 0) {
+        <p class="empty-log">Журнал пуст. Выполните клики для просмотра действий.</p>
+      } @else {
+        @for (action of actionLog(); track $index) {
+          <div class="log-entry">{{ action }}</div>
+        }
+      }
+    </div>
+  </div>
+</div>

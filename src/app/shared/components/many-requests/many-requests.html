@@ -1,0 +1,78 @@
+<div class="many-requests-container">
+  <h2 class="h2-primary">Задача 4. Множество запросов</h2>
+
+  <div class="description">
+    <p>При клике на кнопку выполняется следующая последовательность запросов:</p>
+    <ol>
+      <li>Получение 5 пользователей</li>
+      <li>Для каждого пользователя параллельно получение корзины и списка todos</li>
+      <li>Формирование данных в формате <code>&#123;userId: 1, cart: &#123;...&#125;, todo: &#123;...&#125;&#125;</code></li>
+      <li>Вывод результата в консоль</li>
+    </ol>
+  </div>
+
+  <div class="button-container">
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="loadData()"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+        <span class="spinner"></span>
+        Загрузка...
+      } @else {
+        Загрузить данные
+      }
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-info">
+      <p>Выполнено запросов: {{ requestCount() }}</p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  }
+
+  @if (result().length > 0 && !isLoading()) {
+    <div class="result-container">
+      <div class="result-header">
+        <h3>Результат ({{ result().length }} пользователей)</h3>
+        <p class="result-note">Данные также выведены в консоль браузера</p>
+      </div>
+      <div class="result-content">
+        @for (userData of result(); track userData.userId) {
+          <div class="user-data-card">
+            <div class="user-data-header">
+              <h4>User ID: {{ userData.userId }}</h4>
+            </div>
+            <div class="user-data-body">
+              <div class="data-section">
+                <h5>Cart:</h5>
+                @if (userData.cart) {
+                  <pre>{{ userData.cart | json }}</pre>
+                } @else {
+                  <p class="no-data">Корзина не найдена</p>
+                }
+              </div>
+              <div class="data-section">
+                <h5>Todos ({{ userData.todo?.length || 0 }}):</h5>
+                @if (userData.todo && userData.todo.length > 0) {
+                  <pre>{{ userData.todo | json }}</pre>
+                } @else {
+                  <p class="no-data">Todos не найдены</p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

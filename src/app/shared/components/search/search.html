@@ -1,0 +1,39 @@
+<div class="search-container">
+  <h2 class="h2-primary">Поиск пользователей</h2>
+
+  <div class="search-box">
+    <input
+      type="text"
+      [value]="searchInput()"
+      (input)="onSearchChange($any($event.target).value)"
+      placeholder="Введите минимум 3 символа для поиска..."
+      class="input-primary"
+    />
+    @if (isLoading()) {
+      <div class="loading">
+        <span class="spinner"></span>
+        Загрузка...
+      </div>
+    }
+  </div>
+
+  @if (searchInput().trim().length > 0 && searchInput().trim().length <= 3) {
+    <div class="info-message">
+      Введите минимум 3 символа для начала поиска
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  <div class="users-grid">
+    @if (users().length === 0 && !isLoading()) {
+      <div class="empty-state">Пользователи не найдены</div>
+    } @else {
+      @for (user of users(); track user.id) {
+        <app-user-card [user]="user"></app-user-card>
+      }
+    }
+  </div>
+</div>

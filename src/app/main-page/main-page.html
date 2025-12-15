@@ -1,0 +1,38 @@
+<nav>
+  <ul class="nav-list">
+    <li 
+      class="nav-item" 
+      [class.active]="selectedTask() === 'task1'"
+      (click)="selectTask('task1')">
+      Task 1
+    </li>
+    <li 
+      class="nav-item" 
+      [class.active]="selectedTask() === 'task2'"
+      (click)="selectTask('task2')">
+      Task 2
+    </li>
+    <li 
+      class="nav-item" 
+      [class.active]="selectedTask() === 'task3'"
+      (click)="selectTask('task3')">
+      Task 3
+    </li>
+    <li 
+      class="nav-item" 
+      [class.active]="selectedTask() === 'task4'"
+      (click)="selectTask('task4')">
+      Task 4
+    </li>
+  </ul>
+</nav>
+
+@if (selectedTask() === 'task1') {
+  <app-test-rxjs-operator></app-test-rxjs-operator>
+} @else if (selectedTask() === 'task2') {
+  <app-search></app-search>
+} @else if (selectedTask() === 'task3') {
+  <app-clicks></app-clicks>
+} @else if (selectedTask() === 'task4') {
+  <app-many-requests></app-many-requests>
+}
