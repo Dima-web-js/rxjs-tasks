@@ -144,7 +144,7 @@ export class Search implements OnInit, OnDestroy {
   ngOnInit(): void {
     const sub = this.searchSubject.pipe(
       map(v => v.trim()),
-      debounceTime(500),
+      debounceTime(300),
 
       
       distinctUntilChanged(), // игнорируем повторяющиеся значения

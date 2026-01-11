@@ -1,6 +1,6 @@
-import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, inject, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { of, forkJoin, switchMap, map, catchError, tap, finalize } from 'rxjs';
+import { of, forkJoin, switchMap, map, catchError, tap, finalize, Subscription } from 'rxjs';
 import { UserDataService } from '../../services/user-data.service';
 import { UserData } from '../../interfaces/user-data.interface';
 import { User } from '../../interfaces/user.interface';
@@ -14,13 +14,19 @@ import { Todo } from '../../interfaces/todo.interface';
   styleUrl: './many-requests.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManyRequests {
+export class ManyRequests implements OnDestroy {
   private readonly userDataService = inject(UserDataService);
+  private subscription = new Subscription();
 
   isLoading = signal<boolean>(false);
   error = signal<string>('');
   result = signal<UserData[]>([]);
   requestCount = signal<number>(0);
+
+  ngOnDestroy(): void {
+    // Отписываемся от всех подписок при уничтожении компонента
+    this.subscription.unsubscribe();
+  }
 
   loadData(): void {
     this.isLoading.set(true);
@@ -28,7 +34,7 @@ export class ManyRequests {
     this.requestCount.set(0);
 
     // Получаем 5 пользователей
-    this.userDataService
+    const subscription = this.userDataService
     // У первых 5 нет корзины, но если, например 20 ввести, то увидим
       .getUsersByLimit(5)
       .pipe(
@@ -89,5 +95,8 @@ export class ManyRequests {
           console.error('Критическая ошибка:', err);
         },
       });
+
+    // Сохраняем подписку для отписки при уничтожении компонента
+    this.subscription.add(subscription);
   }
 }
